@@ -8,7 +8,7 @@ from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chat_models import init_chat_model
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import WebBaseLoader
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     docs = loader.load()
     # print(docs)
-    docs_dict = [doc.dict() for doc in docs]
+    docs_dict = [doc.model_dump() for doc in docs]
     print(json.dumps(docs_dict, indent=4, ensure_ascii=False))
 
     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
@@ -45,7 +45,8 @@ if __name__ == '__main__':
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", system_message),
-            ("human", "{input}")
+            ("human", "{input}"),
+            # MessagesPlaceholder(variable_name="my_msg"),
         ]
     )
 
